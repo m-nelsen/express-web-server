@@ -31,9 +31,9 @@ app.get("/dev", (req, res) => {
   res.sendFile(path.join(__dirname, "projects/portfolio/build/"));
 });
 
-app.get("/", (req, res) => {
-  app.use("/", express.static(path.join(__dirname, "projects/wedding/build")));
-  res.sendFile(path.join(__dirname, "projects/wedding/build/"));
+app.get("/wedding", (req, res) => {
+  app.use("/", express.static(path.join(__dirname, "projects/wedding/dist")));
+  res.sendFile(path.join(__dirname, "projects/wedding/dist/"));
 });
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
