@@ -33,10 +33,10 @@ router.post("/", async (req, res) => {
 });
 
 // Routes below are password protected
-// router.use((req, res, next) => {
-//   if (req.user) next();
-//   else res.sendStatus(401);
-// });
+router.use((req, res, next) => {
+  if (req.user) next();
+  else res.sendStatus(401);
+});
 
 // Get all wedding registrants
 router.get("/", async (req, res) => {
