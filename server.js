@@ -1,39 +1,40 @@
-require("dotenv").config();
-
 const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const path = require("path");
+const passport = require("passport");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const cors = require("cors");
 
+require("dotenv").config();
+require("./strategies/local");
+require("./database");
+
+// Routes
+const authRoutes = require("./routes/auth");
 const weddingRoutes = require("./routes/wedding");
-
-const PORT = process.env.PORT;
-
-mongoose.connect(process.env.MONGO_URI);
-const db = mongoose.connection;
-
-db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("Server started"));
+const projectRoutes = require("./routes/projects");
 
 const app = express();
+const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+    }),
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
+app.use("/api/auth", authRoutes);
 app.use("/api/wedding", weddingRoutes);
-
-app.get("/dev", (req, res) => {
-  app.use(
-    "/",
-    express.static(path.join(__dirname, "projects/portfolio/build"))
-  );
-  res.sendFile(path.join(__dirname, "projects/portfolio/build/"));
-});
-
-app.get("/wedding", (req, res) => {
-  app.use("/", express.static(path.join(__dirname, "projects/wedding/dist")));
-  res.sendFile(path.join(__dirname, "projects/wedding/dist/"));
-});
+app.use("", projectRoutes);
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

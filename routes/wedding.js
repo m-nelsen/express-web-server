@@ -1,16 +1,9 @@
 const express = require("express");
+const Registrant = require("../database/models/Registrant");
+
 const router = express.Router();
-const Registrant = require("../models/wedding/registrant");
 
-router.get("/", async (req, res) => {
-  try {
-    const registrants = await Registrant.find();
-    res.json(registrants);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
+// Add a new wedding registrant
 router.post("/", async (req, res) => {
   try {
     const {
@@ -33,12 +26,29 @@ router.post("/", async (req, res) => {
 
     await newRegistrant.save();
 
-    res.status(201).json({ success: true });
+    res.sendStatus(201);
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 });
 
+// Routes below are password protected
+// router.use((req, res, next) => {
+//   if (req.user) next();
+//   else res.sendStatus(401);
+// });
+
+// Get all wedding registrants
+router.get("/", async (req, res) => {
+  try {
+    const registrants = await Registrant.find();
+    res.json(registrants);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Delete a wedding registrant
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
