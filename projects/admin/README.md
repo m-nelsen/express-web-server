@@ -1,0 +1,2 @@
+ - Build directory from [this project](https://github.com/m-nelsen/admin) should be placed here.
+ - https://github.com/m-nelsen/admin
