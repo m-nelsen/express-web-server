@@ -21,6 +21,7 @@ router.post("/", async (req, res) => {
       attendanceStatus,
       preferredEntree,
       dietaryRestrictions,
+      createdAt: Date.now(),
       guests,
     });
 

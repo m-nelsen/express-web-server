@@ -76,6 +76,11 @@ const registrantSchema = new mongoose.Schema({
     ],
   },
   guests: [guestSchema],
+  createdAt: {
+    type: mongoose.SchemaTypes.Date,
+    required: true,
+    default: new Date(),
+  },
 });
 
 module.exports = mongoose.model("Registrant", registrantSchema);
